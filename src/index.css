@@ -5,40 +5,80 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 font-sans;
+    @apply bg-gray-50 text-gray-900 font-sans text-sm;
+  }
+
+  h1 {
+    @apply text-lg font-semibold text-gray-900;
+  }
+
+  h2 {
+    @apply text-base font-medium text-gray-800;
+  }
+
+  h3 {
+    @apply text-sm font-medium text-gray-700;
+  }
+
+  p {
+    @apply text-sm text-gray-600 leading-relaxed;
   }
 }
 
 @layer components {
   .sidebar-item {
-    @apply flex items-center gap-3 px-4 py-3 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200 cursor-pointer;
+    @apply flex items-center gap-2.5 px-3 py-2.5 text-sm text-gray-400 hover:text-[#F58220] hover:bg-[#2B2B2B]/50 rounded-lg transition-all duration-200 cursor-pointer relative overflow-hidden;
   }
 
+  .sidebar-item::before {
+    @apply content-[''] absolute left-0 top-0 w-1 h-full bg-[#F58220] transform scale-y-0 transition-transform duration-200;
+  }
 
+  .sidebar-item:hover::before {
+    @apply scale-y-100;
+  }
 
   .sidebar-item.active {
-    @apply text-primary-600 bg-primary-50;
+    @apply text-[#F58220] bg-[#2B2B2B] shadow-sm;
   }
 
-
+  .sidebar-item.active::before {
+    @apply scale-y-100;
+  }
 
   .card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-300 p-6;
+    @apply bg-white rounded-xl shadow-md p-4;
   }
 
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+    @apply bg-[#F58220] hover:bg-[#E67300] text-white px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md;
   }
 
   .btn-secondary {
-    @apply bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+    @apply bg-white hover:bg-[#F5F5F5] text-[#333333] border border-[#F58220] px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md;
   }
 
   .table-header {
-    @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+    @apply px-4 py-2.5 text-left text-xs font-medium text-[#333333] uppercase tracking-wider;
   }
 
   .table-cell {
-    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
+    @apply px-4 py-3 whitespace-nowrap text-sm text-[#333333];
+  }
+
+  .input-field {
+    @apply px-3 py-2 border border-[#D3D3D3] rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-transparent text-sm transition-all duration-200 bg-white;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-[#333333] mb-1.5;
+  }
+
+  .section-title {
+    @apply text-sm font-semibold text-[#000000] mb-1;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-[#333333] mb-3;
   }
 }

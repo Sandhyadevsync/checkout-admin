@@ -12,27 +12,27 @@ import { dashboardStats, recentOrders } from '../data/mockData';
 
 const StatCard = ({ title, value, change, icon: Icon, color = 'blue' }) => {
     const colorClasses = {
-        blue: 'text-blue-600 bg-blue-100',
-        green: 'text-green-600 bg-green-100',
-        purple: 'text-purple-600 bg-purple-100',
-        orange: 'text-orange-600 bg-orange-100'
+        blue: 'text-[#F58220] bg-[#FFF2E6]',
+        green: 'text-[#F58220] bg-[#FFF2E6]',
+        purple: 'text-[#F58220] bg-[#FFF2E6]',
+        orange: 'text-[#F58220] bg-[#FFF2E6]'
     };
 
     return (
         <div className="card">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-sm font-medium text-gray-600">{title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{value}</p>
+                    <p className="text-sm font-medium text-[#333333]">{title}</p>
+                    <p className="text-lg font-bold text-[#000000]">{value}</p>
                     {change && (
                         <div className="flex items-center mt-1">
-                            <TrendingUp className="text-green-500" size={16} />
-                            <span className="text-sm text-green-600 ml-1">+{change}%</span>
+                            <TrendingUp className="text-[#F58220]" size={14} />
+                            <span className="text-sm text-[#F58220] ml-1">+{change}%</span>
                         </div>
                     )}
                 </div>
-                <div className={`p-3 rounded-full ${colorClasses[color]}`}>
-                    <Icon size={24} />
+                <div className={`p-2.5 rounded-full ${colorClasses[color]}`}>
+                    <Icon size={20} />
                 </div>
             </div>
         </div>
@@ -80,9 +80,9 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stats.map((stat, index) => (
                     <StatCard key={index} {...stat} />
                 ))}
@@ -93,7 +93,7 @@ const Dashboard = () => {
                 title="Recent Orders"
                 subtitle="Latest orders from your customers"
                 action={
-                    <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                    <button className="text-[#F58220] hover:text-[#E67300] text-sm font-medium">
                         View All
                     </button>
                 }
@@ -104,8 +104,8 @@ const Dashboard = () => {
                             <TableCell className="font-medium">{order.id}</TableCell>
                             <TableCell>
                                 <div>
-                                    <div className="font-medium text-gray-900">{order.customer}</div>
-                                    <div className="text-gray-500">{order.email}</div>
+                                    <div className="font-medium text-[#000000] text-sm">{order.customer}</div>
+                                    <div className="text-[#333333] text-sm">{order.email}</div>
                                 </div>
                             </TableCell>
                             <TableCell className="font-medium">₹{order.amount}</TableCell>
@@ -122,9 +122,9 @@ const Dashboard = () => {
             </Card>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card title="Quick Actions">
-                    <div className="space-y-3">
+                    <div className="space-y-2.5">
                         <button className="w-full btn-primary">Create New Order</button>
                         <button className="w-full btn-secondary">View Reports</button>
                         <button className="w-full btn-secondary">Manage Inventory</button>
@@ -132,41 +132,41 @@ const Dashboard = () => {
                 </Card>
 
                 <Card title="Recent Activity">
-                    <div className="space-y-3">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="space-y-2.5">
+                        <div className="flex items-center space-x-2.5">
+                            <div className="w-1.5 h-1.5 bg-[#F58220] rounded-full"></div>
                             <div className="text-sm">
                                 <div className="font-medium">New order received</div>
-                                <div className="text-gray-500">2 minutes ago</div>
+                                <div className="text-[#333333]">2 minutes ago</div>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div className="flex items-center space-x-2.5">
+                            <div className="w-1.5 h-1.5 bg-[#F58220] rounded-full"></div>
                             <div className="text-sm">
                                 <div className="font-medium">Payment processed</div>
-                                <div className="text-gray-500">15 minutes ago</div>
+                                <div className="text-[#333333]">15 minutes ago</div>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                        <div className="flex items-center space-x-2.5">
+                            <div className="w-1.5 h-1.5 bg-[#F58220] rounded-full"></div>
                             <div className="text-sm">
                                 <div className="font-medium">Order shipped</div>
-                                <div className="text-gray-500">1 hour ago</div>
+                                <div className="text-[#333333]">1 hour ago</div>
                             </div>
                         </div>
                     </div>
                 </Card>
 
                 <Card title="Performance">
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         <div>
                             <div className="flex justify-between text-sm">
                                 <span>Monthly Growth</span>
                                 <span className="font-medium">+{dashboardStats.monthlyGrowth}%</span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                            <div className="w-full bg-[#D3D3D3] rounded-full h-1.5 mt-1">
                                 <div
-                                    className="bg-primary-600 h-2 rounded-full"
+                                    className="bg-[#F58220] h-1.5 rounded-full"
                                     style={{ width: `${dashboardStats.monthlyGrowth}%` }}
                                 ></div>
                             </div>
@@ -176,9 +176,9 @@ const Dashboard = () => {
                                 <span>Conversion Rate</span>
                                 <span className="font-medium">{dashboardStats.conversionRate}%</span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                            <div className="w-full bg-[#D3D3D3] rounded-full h-1.5 mt-1">
                                 <div
-                                    className="bg-green-500 h-2 rounded-full"
+                                    className="bg-[#F58220] h-1.5 rounded-full"
                                     style={{ width: `${dashboardStats.conversionRate}%` }}
                                 ></div>
                             </div>

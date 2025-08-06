@@ -20,14 +20,14 @@ const Finance = () => {
 
     const getTransactionIcon = (type) => {
         return type === 'Credit' ? (
-            <ArrowUpRight className="text-green-600" size={16} />
+            <ArrowUpRight className="text-orange-500" size={16} />
         ) : (
             <ArrowDownRight className="text-red-600" size={16} />
         );
     };
 
     const getTransactionColor = (type) => {
-        return type === 'Credit' ? 'text-green-600' : 'text-red-600';
+        return type === 'Credit' ? 'text-orange-500' : 'text-red-600';
     };
 
     return (
@@ -70,10 +70,10 @@ const Finance = () => {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="text-center p-4 bg-green-50 rounded-lg">
-                            <div className="text-2xl font-bold text-green-600">
+                            <div className="text-2xl font-bold text-orange-500">
                                 {formatCurrency(financeData.monthlyRevenue)}
                             </div>
-                            <div className="text-sm text-green-600">Monthly Revenue</div>
+                            <div className="text-sm text-orange-500">Monthly Revenue</div>
                         </div>
                         <div className="text-center p-4 bg-red-50 rounded-lg">
                             <div className="text-2xl font-bold text-red-600">
@@ -100,12 +100,12 @@ const Finance = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Net Profit</p>
-                            <p className="text-2xl font-bold text-green-600">
+                            <p className="text-2xl font-bold text-orange-500">
                                 {formatCurrency(financeData.monthlyRevenue - financeData.monthlyExpenses)}
                             </p>
                         </div>
-                        <div className="p-3 bg-green-100 rounded-full">
-                            <TrendingUp className="text-green-600" size={24} />
+                        <div className="p-3 bg-orange-100 rounded-full">
+                            <TrendingUp className="text-orange-500" size={24} />
                         </div>
                     </div>
                 </Card>
@@ -128,12 +128,12 @@ const Finance = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Profit Margin</p>
-                            <p className="text-2xl font-bold text-blue-600">
+                            <p className="text-2xl font-bold text-orange-500">
                                 {((financeData.monthlyRevenue - financeData.monthlyExpenses) / financeData.monthlyRevenue * 100).toFixed(1)}%
                             </p>
                         </div>
-                        <div className="p-3 bg-blue-100 rounded-full">
-                            <TrendingUp className="text-blue-600" size={24} />
+                        <div className="p-3 bg-orange-100 rounded-full">
+                            <TrendingUp className="text-orange-500" size={24} />
                         </div>
                     </div>
                 </Card>
@@ -142,12 +142,12 @@ const Finance = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Avg Transaction</p>
-                            <p className="text-2xl font-bold text-purple-600">
+                            <p className="text-2xl font-bold text-orange-500">
                                 {formatCurrency(financeData.monthlyRevenue / financeData.transactions.length)}
                             </p>
                         </div>
-                        <div className="p-3 bg-purple-100 rounded-full">
-                            <TrendingUp className="text-purple-600" size={24} />
+                        <div className="p-3 bg-orange-100 rounded-full">
+                            <TrendingUp className="text-orange-500" size={24} />
                         </div>
                     </div>
                 </Card>
@@ -188,10 +188,10 @@ const Finance = () => {
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
                             <span className="text-sm text-gray-600">This Month</span>
-                            <span className="text-sm font-medium text-green-600">+12.5%</span>
+                            <span className="text-sm font-medium text-orange-500">+12.5%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div className="bg-green-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+                            <div className="bg-orange-500 h-2 rounded-full" style={{ width: '75%' }}></div>
                         </div>
 
                         <div className="flex justify-between items-center">
@@ -199,7 +199,7 @@ const Finance = () => {
                             <span className="text-sm font-medium text-gray-600">+8.2%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div className="bg-blue-500 h-2 rounded-full" style={{ width: '60%' }}></div>
+                            <div className="bg-orange-500 h-2 rounded-full" style={{ width: '60%' }}></div>
                         </div>
                     </div>
                 </Card>

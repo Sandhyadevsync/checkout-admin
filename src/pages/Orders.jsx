@@ -53,7 +53,7 @@ const Orders = () => {
                                 placeholder="Search orders..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent w-full sm:w-80"
+                                className="pl-10 pr-4 py-2 border border-[#D3D3D3] rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-transparent w-full sm:w-80"
                             />
                         </div>
 
@@ -61,7 +61,7 @@ const Orders = () => {
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            className="px-4 py-2 border border-[#D3D3D3] rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-transparent"
                         >
                             <option value="all">All Status</option>
                             <option value="Pending">Pending</option>
@@ -94,8 +94,8 @@ const Orders = () => {
                             <TableCell className="font-medium">{order.id}</TableCell>
                             <TableCell>
                                 <div>
-                                    <div className="font-medium text-gray-900">{order.customer}</div>
-                                    <div className="text-gray-500">{order.email}</div>
+                                    <div className="font-medium text-[#000000]">{order.customer}</div>
+                                    <div className="text-[#333333]">{order.email}</div>
                                 </div>
                             </TableCell>
                             <TableCell className="font-medium">₹{order.amount}</TableCell>
@@ -108,14 +108,14 @@ const Orders = () => {
                             <TableCell>{order.items} items</TableCell>
                             <TableCell>
                                 <div className="flex items-center space-x-2">
-                                    <button className="p-1 hover:bg-gray-100 rounded transition-colors" title="View Details">
-                                        <Eye size={16} className="text-gray-600" />
+                                    <button className="p-1 hover:bg-[#F5F5F5] rounded transition-colors" title="View Details">
+                                        <Eye size={16} className="text-[#333333]" />
                                     </button>
-                                    <button className="p-1 hover:bg-gray-100 rounded transition-colors" title="Edit Order">
-                                        <Edit size={16} className="text-gray-600" />
+                                    <button className="p-1 hover:bg-[#F5F5F5] rounded transition-colors" title="Edit Order">
+                                        <Edit size={16} className="text-[#333333]" />
                                     </button>
-                                    <button className="p-1 hover:bg-gray-100 rounded transition-colors" title="More Options">
-                                        <MoreHorizontal size={16} className="text-gray-600" />
+                                    <button className="p-1 hover:bg-[#F5F5F5] rounded transition-colors" title="More Options">
+                                        <MoreHorizontal size={16} className="text-[#333333]" />
                                     </button>
                                 </div>
                             </TableCell>
@@ -125,7 +125,7 @@ const Orders = () => {
 
                 {filteredOrders.length === 0 && (
                     <div className="text-center py-8">
-                        <div className="text-gray-500">No orders found matching your criteria</div>
+                        <div className="text-[#333333]">No orders found matching your criteria</div>
                     </div>
                 )}
             </Card>
@@ -134,32 +134,32 @@ const Orders = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-gray-900">{recentOrders.length}</div>
-                        <div className="text-sm text-gray-600">Total Orders</div>
+                        <div className="text-2xl font-bold text-[#000000]">{recentOrders.length}</div>
+                        <div className="text-sm text-[#333333]">Total Orders</div>
                     </div>
                 </Card>
                 <Card>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-green-600">
+                        <div className="text-2xl font-bold text-[#F58220]">
                             {recentOrders.filter(o => o.status === 'Delivered').length}
                         </div>
-                        <div className="text-sm text-gray-600">Delivered</div>
+                        <div className="text-sm text-[#333333]">Delivered</div>
                     </div>
                 </Card>
                 <Card>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-600">
+                        <div className="text-2xl font-bold text-[#F58220]">
                             {recentOrders.filter(o => o.status === 'Processing').length}
                         </div>
-                        <div className="text-sm text-gray-600">Processing</div>
+                        <div className="text-sm text-[#333333]">Processing</div>
                     </div>
                 </Card>
                 <Card>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-yellow-600">
+                        <div className="text-2xl font-bold text-[#F58220]">
                             {recentOrders.filter(o => o.status === 'Shipped').length}
                         </div>
-                        <div className="text-sm text-gray-600">Shipped</div>
+                        <div className="text-sm text-[#333333]">Shipped</div>
                     </div>
                 </Card>
             </div>
