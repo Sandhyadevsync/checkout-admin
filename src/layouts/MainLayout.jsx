@@ -51,7 +51,19 @@ const MainLayout = ({ children }) => {
                 {/* Top navbar */}
                 <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3">
                     <div className="flex items-center justify-between">
-                        <h1 className="text-lg font-semibold text-gray-900">Admin Panel</h1>
+                        <div className="flex items-center gap-3">
+                            <img
+                                src="/devsync-logo.png"
+                                alt="DevSync Checkout Logo"
+                                className="w-16 h-16 object-contain"
+                                onError={(e) => {
+                                    // Fallback to text if image fails to load
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'block';
+                                }}
+                            />
+                            <span className="text-lg font-semibold text-gray-900 hidden">DevSync Checkout</span>
+                        </div>
                         <button
                             onClick={() => setSidebarOpen(!sidebarOpen)}
                             className="p-2 rounded-lg hover:bg-gray-100 transition-colors"

@@ -36,21 +36,22 @@ const Sidebar = () => {
 
     return (
         <div
-            className={`bg-[#000000] border-r border-[#2B2B2B] h-screen transition-all duration-300 relative overflow-hidden ${isExpanded ? 'w-64' : 'w-16'}`}
+            className={`bg-[#1E1E1E] border-r border-[#2D2D2D] h-screen transition-all duration-500 ease-in-out relative overflow-hidden ${isExpanded ? 'w-64' : 'w-16'}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={() => setCollapsed(!collapsed)}
         >
             <div className="flex flex-col h-full relative z-10">
                 {/* Header */}
-                <div className={`flex items-center ${isExpanded ? 'justify-between' : 'justify-center'} p-3 border-b border-[#2B2B2B] bg-[#000000]`}>
+                <div className={`flex items-center ${isExpanded ? 'justify-center' : 'justify-center'} p-4 border-b border-[#2D2D2D] bg-white`}>
                     {isExpanded ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                             {/* Logo */}
                             <div className="flex items-center">
                                 <img
-                                    src="/logo.webp"
+                                    src="/devsync-logo.png"
                                     alt="DevSync Checkout Logo"
-                                    className="w-8 h-8 object-contain"
+                                    className="w-14 h-14 object-contain"
                                     onError={(e) => {
                                         // Fallback to text if image fails to load
                                         e.target.style.display = 'none';
@@ -80,15 +81,14 @@ const Sidebar = () => {
                                     <div className="absolute -right-3 top-2 w-2 h-0.5 bg-[#F58220]"></div>
                                 </div>
                             </div>
-                            <h1 className="text-base font-semibold text-white">DevSync Checkout</h1>
                         </div>
                     ) : (
                         <div className="flex items-center justify-center">
                             {/* Logo for collapsed state */}
                             <img
-                                src="/logo.webp"
+                                src="/logo-1.png"
                                 alt="DevSync Checkout Logo"
-                                className="w-6 h-6 object-contain"
+                                className="w-12 h-12 object-contain"
                                 onError={(e) => {
                                     // Fallback to CSS logo if image fails to load
                                     e.target.style.display = 'none';
@@ -119,16 +119,10 @@ const Sidebar = () => {
                             </div>
                         </div>
                     )}
-                    <button
-                        onClick={() => setCollapsed(!collapsed)}
-                        className="p-1.5 rounded-lg hover:bg-[#2B2B2B] transition-colors text-white"
-                    >
-                        {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-                    </button>
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 p-3 space-y-1.5">
+                <nav className="flex-1 p-4 space-y-2">
                     {navigation.map((item) => {
                         const Icon = item.icon;
                         return (
@@ -138,8 +132,8 @@ const Sidebar = () => {
                                 className={`sidebar-item ${isActive(item.path) ? 'active' : ''} ${!isExpanded ? '!justify-center !gap-0 !px-2' : ''}`}
                                 title={!isExpanded ? item.name : ''}
                             >
-                                <Icon size={18} className={`${isActive(item.path) ? 'text-[#F58220]' : 'text-gray-400'} transition-colors duration-200`} />
-                                {isExpanded && <span className={`font-medium ${isActive(item.path) ? 'text-[#F58220]' : 'text-gray-400'}`}>{item.name}</span>}
+                                <Icon size={20} className={`${isActive(item.path) ? 'text-[#F58220]' : 'text-gray-400'} transition-colors duration-200`} />
+                                {isExpanded && <span className={`font-medium text-sm ${isActive(item.path) ? 'text-[#F58220]' : 'text-gray-400'}`}>{item.name}</span>}
                             </Link>
                         );
                     })}
@@ -147,9 +141,9 @@ const Sidebar = () => {
 
                 {/* Footer */}
                 {isExpanded && (
-                    <div className="p-3 bg-[#000000]">
+                    <div className="p-4 bg-[#1E1E1E] border-t border-[#2D2D2D]">
                         <div className="text-xs text-gray-400 font-medium">
-                            © 2025 Devsync Checkout
+                            © 2025 DevSync Checkout
                         </div>
                     </div>
                 )}
