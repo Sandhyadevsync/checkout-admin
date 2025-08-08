@@ -61,7 +61,8 @@ const DiscountSettings = () => {
         {
             id: 5,
             code: 'FREESHIP',
-            name: 'Free shipping on all orders',
+            
+            
             type: 'Free Shipping',
             tags: ['Fastrr', 'Free Shipping', 'Discount'],
             startDate: '2025-01-25 00:00',

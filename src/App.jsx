@@ -5,6 +5,7 @@ import Orders from './pages/Orders';
 import AbandonedCarts from './pages/AbandonedCarts';
 import Finance from './pages/Finance';
 import Reports from './pages/Reports';
+import UserManagement from './pages/UserManagement';
 import Settings from './pages/Settings';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/abandoned-carts" element={<AbandonedCarts />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/user-management" element={<UserManagement />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </MainLayout>

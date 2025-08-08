@@ -8,9 +8,7 @@ import {
     CreditCard,
     Package,
     Globe,
-    MapPin as MapPinIcon,
-    Webhook,
-    Gift
+    MapPin as MapPinIcon
 } from 'lucide-react';
 
 // Import reusable settings components
@@ -18,11 +16,8 @@ import GeneralSettings from '../components/settings/GeneralSettings';
 import DiscountSettings from '../components/settings/DiscountSettings';
 import ShippingSettings from '../components/settings/ShippingSettings';
 import PaymentSettings from '../components/settings/PaymentSettings';
-import InventorySettings from '../components/settings/InventorySettings';
 import PlatformSettings from '../components/settings/PlatformSettings';
 import TrackingSettings from '../components/settings/TrackingSettings';
-import WebhookSettings from '../components/settings/WebhookSettings';
-import RewardsSettings from '../components/settings/RewardsSettings';
 
 const Settings = () => {
     const [activeSection, setActiveSection] = useState('general');
@@ -33,14 +28,9 @@ const Settings = () => {
         { id: 'discounts', name: 'Discounts', icon: Percent },
         { id: 'shipping', name: 'Shipping Settings', icon: Truck },
         { id: 'payment', name: 'Payment', icon: CreditCard },
-        { id: 'inventory', name: 'Inventory', icon: Package },
         { id: 'platform', name: 'Platform', icon: Globe },
-        { id: 'tracking', name: 'Tracking Info', icon: MapPinIcon },
-        { id: 'webhooks', name: 'Webhooks', icon: Webhook },
-        { id: 'rewards', name: 'Rewards & Loyalty', icon: Gift }
+        { id: 'tracking', name: 'Tracking Info', icon: MapPinIcon }
     ];
-
-
 
     const renderContent = () => {
         switch (activeSection) {
@@ -52,16 +42,10 @@ const Settings = () => {
                 return <ShippingSettings />;
             case 'payment':
                 return <PaymentSettings />;
-            case 'inventory':
-                return <InventorySettings />;
             case 'platform':
                 return <PlatformSettings />;
             case 'tracking':
                 return <TrackingSettings />;
-            case 'webhooks':
-                return <WebhookSettings />;
-            case 'rewards':
-                return <RewardsSettings />;
             default:
                 return <GeneralSettings />;
         }

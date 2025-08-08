@@ -8,7 +8,8 @@ import {
     Settings,
     BarChart3,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    Users
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -22,6 +23,7 @@ const Sidebar = () => {
         { name: 'Abandoned Carts', icon: ShoppingBag, path: '/abandoned-carts' },
         { name: 'Finance', icon: Wallet, path: '/finance' },
         { name: 'Reports', icon: BarChart3, path: '/reports' },
+        { name: 'User Management', icon: Users, path: '/user-management' },
         { name: 'Settings', icon: Settings, path: '/settings' },
     ];
 
