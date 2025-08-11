@@ -235,14 +235,6 @@ const UserManagement = () => {
 
                     {/* Action Buttons */}
                     <div className="flex items-center space-x-3">
-                        <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700">
-                            <Download size={16} />
-                            <span>Export</span>
-                        </button>
-                        <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700">
-                            <Upload size={16} />
-                            <span>Import</span>
-                        </button>
                         <button
                             onClick={handleAddUser}
                             className="flex items-center space-x-2 px-4 py-2 bg-[#F58220] text-white rounded-lg hover:bg-[#E67300] transition-colors"

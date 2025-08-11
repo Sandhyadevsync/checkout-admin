@@ -6,39 +6,18 @@ import {
     Edit,
     MoreHorizontal,
     Phone,
-    Hash,
-    Calendar,
-    User,
-    CreditCard,
-    Truck,
-    Tag,
-    Globe,
-    Package,
-    Percent,
-    Settings,
+    Clock,
+    AlertCircle,
     ChevronDown
 } from 'lucide-react';
 import Card from '../components/Card';
 import { Table, TableRow, TableCell } from '../components/Table';
 import { recentOrders } from '../data/mockData';
 
-const Orders = () => {
+const PendingOrders = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [phoneFilter, setPhoneFilter] = useState('');
     const [searchCriteria, setSearchCriteria] = useState('all');
-    const [sortBy, setSortBy] = useState('date');
-    const [sortOrder, setSortOrder] = useState('desc');
-
-    const getStatusColor = (status) => {
-        const colors = {
-            'Delivered': 'bg-green-100 text-green-800',
-            'Processing': 'bg-blue-100 text-blue-800',
-            'Shipped': 'bg-yellow-100 text-yellow-800',
-            'Pending': 'bg-orange-100 text-orange-800',
-            'Cancelled': 'bg-red-100 text-red-800'
-        };
-        return colors[status] || 'bg-gray-100 text-gray-800';
-    };
 
     const getPaymentStatusColor = (status) => {
         const colors = {
@@ -49,7 +28,10 @@ const Orders = () => {
         return colors[status] || 'bg-gray-100 text-gray-800';
     };
 
-    const filteredOrders = recentOrders.filter(order => {
+    // Filter only pending orders
+    const pendingOrders = recentOrders.filter(order => order.status === 'Pending');
+
+    const filteredOrders = pendingOrders.filter(order => {
         let matchesSearch = false;
 
         switch (searchCriteria) {
@@ -77,50 +59,13 @@ const Orders = () => {
         return matchesSearch && matchesPhone;
     });
 
-    const sortedOrders = [...filteredOrders].sort((a, b) => {
-        let aValue, bValue;
-
-        switch (sortBy) {
-            case 'phone':
-                aValue = a.phone;
-                bValue = b.phone;
-                break;
-            case 'orderId':
-                aValue = a.clientOrderId;
-                bValue = b.clientOrderId;
-                break;
-            case 'date':
-            default:
-                aValue = new Date(a.date + ' ' + a.time);
-                bValue = new Date(b.date + ' ' + b.time);
-                break;
-        }
-
-        if (sortOrder === 'asc') {
-            return aValue > bValue ? 1 : -1;
-        } else {
-            return aValue < bValue ? 1 : -1;
-        }
-    });
-
-    const handleSort = (field) => {
-        if (sortBy === field) {
-            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-        } else {
-            setSortBy(field);
-            setSortOrder('desc');
-        }
-    };
-
-    const getSortIcon = (field) => {
-        if (sortBy !== field) return null;
-        return sortOrder === 'asc' ? '↑' : '↓';
-    };
-
-    const totalSales = sortedOrders.reduce((sum, order) => {
+    const totalPendingAmount = filteredOrders.reduce((sum, order) => {
         const amount = parseFloat(order.amount.replace(/,/g, ''));
         return sum + amount;
     }, 0);
+
+    const codOrders = filteredOrders.filter(order => order.paymentMethod === 'COD').length;
+    const prepaidOrders = filteredOrders.filter(order => order.paymentMethod !== 'COD').length;
 
     const handleDownload = () => {
         // Create CSV content
@@ -146,7 +91,7 @@ const Orders = () => {
 
         const csvContent = [
             headers.join(','),
-            ...sortedOrders.map(order => [
+            ...filteredOrders.map(order => [
                 order.clientOrderId,
                 order.date,
                 order.time,
@@ -172,7 +117,7 @@ const Orders = () => {
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', `orders_${new Date().toISOString().split('T')[0]}.csv`);
+        link.setAttribute('download', `pending_orders_${new Date().toISOString().split('T')[0]}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -195,16 +140,17 @@ const Orders = () => {
 
     return (
         <div className="space-y-6">
+
             {/* Statistics Cards */}
             <div className="flex flex-wrap gap-6">
                 <Card className="w-64">
                     <div className="flex items-center justify-between">
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">₹{totalSales.toLocaleString('en-IN')}</div>
-                            <div className="text-sm text-gray-600">Sales</div>
+                            <div className="text-2xl font-bold text-orange-600">{filteredOrders.length}</div>
+                            <div className="text-sm text-gray-600">Total Pending</div>
                         </div>
-                        <div className="p-3 bg-blue-50 rounded-lg">
-                            <CreditCard size={24} className="text-blue-600" />
+                        <div className="p-3 bg-orange-50 rounded-lg">
+                            <Clock size={24} className="text-orange-500" />
                         </div>
                     </div>
                 </Card>
@@ -212,11 +158,23 @@ const Orders = () => {
                 <Card className="w-64">
                     <div className="flex items-center justify-between">
                         <div>
-                            <div className="text-2xl font-bold text-gray-900">{sortedOrders.length}</div>
-                            <div className="text-sm text-gray-600">Total Orders</div>
+                            <div className="text-2xl font-bold text-blue-600">{codOrders}</div>
+                            <div className="text-sm text-gray-600">Cash on Delivery</div>
+                        </div>
+                        <div className="p-3 bg-blue-50 rounded-lg">
+                            <AlertCircle size={24} className="text-blue-500" />
+                        </div>
+                    </div>
+                </Card>
+
+                <Card className="w-64">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="text-2xl font-bold text-green-600">{prepaidOrders}</div>
+                            <div className="text-sm text-gray-600">Prepaid Orders</div>
                         </div>
                         <div className="p-3 bg-green-50 rounded-lg">
-                            <Package size={24} className="text-green-600" />
+                            <AlertCircle size={24} className="text-green-500" />
                         </div>
                     </div>
                 </Card>
@@ -234,7 +192,7 @@ const Orders = () => {
                                 onChange={(e) => setSearchCriteria(e.target.value)}
                                 className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-[#F58220] bg-white cursor-pointer w-full sm:w-40"
                             >
-                                {/* <option value="all">All Fields</option> */}
+                                <option value="all">All Fields</option>
                                 <option value="phone">Phone Number</option>
                                 <option value="orderId">Order ID</option>
                                 <option value="platformId">Platform ID</option>
@@ -266,7 +224,7 @@ const Orders = () => {
                 </div>
             </Card>
 
-            {/* Orders Table */}
+            {/* Pending Orders Table */}
             <Card>
                 <div className="overflow-x-auto">
                     <Table headers={[
@@ -286,7 +244,7 @@ const Orders = () => {
                         'Discount Name',
                         'Action'
                     ]}>
-                        {sortedOrders.map((order) => (
+                        {filteredOrders.map((order) => (
                             <TableRow key={order.id}>
                                 <TableCell className="font-medium text-blue-600 cursor-pointer hover:underline">
                                     {order.clientOrderId}
@@ -360,10 +318,16 @@ const Orders = () => {
                         ))}
                     </Table>
 
-                    {sortedOrders.length === 0 && (
+                    {filteredOrders.length === 0 && (
                         <div className="text-center py-12">
-                            <div className="text-lg font-medium text-gray-900 mb-2">No orders found</div>
-                            <div className="text-gray-500">Try adjusting your search criteria or filters</div>
+                            <Clock size={48} className="mx-auto text-gray-300 mb-4" />
+                            <div className="text-lg font-medium text-gray-900 mb-2">No pending orders found</div>
+                            <div className="text-gray-500">
+                                {searchTerm || phoneFilter
+                                    ? 'Try adjusting your search criteria or filters'
+                                    : 'All orders have been processed!'
+                                }
+                            </div>
                         </div>
                     )}
                 </div>
@@ -372,4 +336,4 @@ const Orders = () => {
     );
 };
 
-export default Orders; 
+export default PendingOrders;

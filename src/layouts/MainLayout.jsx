@@ -9,18 +9,29 @@ const MainLayout = ({ children }) => {
     const location = useLocation();
 
     const getCurrentSection = () => {
-        const path = location.pathname;
-        switch (path) {
+        switch (location.pathname) {
             case '/':
                 return 'Dashboard';
             case '/orders':
                 return 'Orders';
+            case '/pending-orders': // Added for Pending Orders
+                return 'Pending Orders';
             case '/abandoned-carts':
                 return 'Abandoned Carts';
             case '/finance':
-                return 'Finance';
+                return 'Customer Finance';
+            case '/refunds':
+                return 'Refunds';
+            case '/wallet':
+                return 'Wallet';
+            case '/settlement-history':
+                return 'Settlement History';
+            case '/rewards-history':
+                return 'Rewards History';
             case '/reports':
                 return 'Reports';
+            case '/user-management':
+                return 'User Management';
             case '/settings':
                 return 'Settings';
             default:

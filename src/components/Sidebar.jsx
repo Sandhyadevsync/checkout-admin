@@ -7,24 +7,47 @@ import {
     Wallet,
     Settings,
     BarChart3,
-    ChevronLeft,
-    ChevronRight,
-    Users
+    Users,
+    Clock,
+    TrendingDown,
+    CreditCard
 } from 'lucide-react';
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [expandedSections, setExpandedSections] = useState(new Set(['orders']));
     const location = useLocation();
 
     const navigation = [
-        { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-        { name: 'Orders', icon: ShoppingCart, path: '/orders' },
-        { name: 'Abandoned Carts', icon: ShoppingBag, path: '/abandoned-carts' },
-        { name: 'Finance', icon: Wallet, path: '/finance' },
-        { name: 'Reports', icon: BarChart3, path: '/reports' },
-        { name: 'User Management', icon: Users, path: '/user-management' },
-        { name: 'Settings', icon: Settings, path: '/settings' },
+        { name: 'Dashboard', icon: LayoutDashboard, path: '/', type: 'item' },
+        {
+            name: 'Orders',
+            icon: ShoppingCart,
+            path: '/orders',
+            type: 'section',
+            children: [
+                { name: 'Orders', path: '/orders', icon: ShoppingCart },
+                { name: 'Pending Orders', path: '/pending-orders', icon: Clock }
+            ]
+        },
+        { name: 'Abandoned Carts', icon: ShoppingBag, path: '/abandoned-carts', type: 'item' },
+        {
+            name: 'Finance',
+            icon: Wallet,
+            path: '/finance',
+            type: 'section',
+            children: [
+                { name: 'Customer Finance', path: '/finance', icon: Wallet },
+                { name: 'Refunds', path: '/refunds', icon: TrendingDown },
+                { name: 'Wallet', path: '/wallet', icon: CreditCard },
+                { name: 'Settlement History', path: '/settlement-history', icon: BarChart3 },
+                { name: 'Rewards History', path: '/rewards-history', icon: BarChart3 }
+            ]
+        },
+        { name: 'Reports', icon: BarChart3, path: '/reports', type: 'item' },
+        { name: 'User Management', icon: Users, path: '/user-management', type: 'item' },
+        { name: 'Settings', icon: Settings, path: '/settings', type: 'item' },
     ];
 
     const isActive = (path) => {
@@ -35,6 +58,18 @@ const Sidebar = () => {
     };
 
     const isExpanded = !collapsed || isHovered;
+
+    const toggleSection = (sectionName) => {
+        setExpandedSections(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(sectionName)) {
+                newSet.delete(sectionName);
+            } else {
+                newSet.add(sectionName);
+            }
+            return newSet;
+        });
+    };
 
     return (
         <div
@@ -127,6 +162,53 @@ const Sidebar = () => {
                 <nav className="flex-1 p-4 space-y-2">
                     {navigation.map((item) => {
                         const Icon = item.icon;
+
+                        if (item.type === 'section') {
+                            const isSectionExpanded = expandedSections.has(item.name.toLowerCase());
+                            const hasActiveChild = item.children?.some(child => isActive(child.path));
+
+                            return (
+                                <div key={item.name}>
+                                    <button
+                                        onClick={() => toggleSection(item.name.toLowerCase())}
+                                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-all duration-200 ${hasActiveChild ? 'bg-[#2D2D2D] text-[#F58220]' : 'text-gray-400 hover:bg-[#2D2D2D] hover:text-gray-300'
+                                            }`}
+                                    >
+                                        <div className="flex items-center space-x-3">
+                                            <Icon size={20} />
+                                            {isExpanded && <span className="font-medium text-sm">{item.name}</span>}
+                                        </div>
+                                        {isExpanded && (
+                                            <span className={`transform transition-transform duration-200 ${isSectionExpanded ? 'rotate-180' : ''}`}>
+                                                ▼
+                                            </span>
+                                        )}
+                                    </button>
+
+                                    {isExpanded && isSectionExpanded && (
+                                        <div className="ml-6 mt-2 space-y-1">
+                                            {item.children.map((child) => {
+                                                const ChildIcon = child.icon;
+                                                return (
+                                                    <Link
+                                                        key={child.name}
+                                                        to={child.path}
+                                                        className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${isActive(child.path)
+                                                            ? 'bg-[#F58220] text-white'
+                                                            : 'text-gray-400 hover:bg-[#2D2D2D] hover:text-gray-300'
+                                                            }`}
+                                                    >
+                                                        <ChildIcon size={16} />
+                                                        <span>{child.name}</span>
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        }
+
                         return (
                             <Link
                                 key={item.name}
@@ -154,4 +236,4 @@ const Sidebar = () => {
     );
 };
 
-export default Sidebar; 
+export default Sidebar;

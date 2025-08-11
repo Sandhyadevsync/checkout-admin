@@ -6,78 +6,87 @@ import {
     ChevronLeft,
     ChevronRight,
     Search,
+    ShoppingCart,
     ChevronDown as FilterIcon
 } from 'lucide-react';
 import Card from '../components/Card';
 import { Table, TableRow, TableCell } from '../components/Table';
 
-const Finance = () => {
+const SettlementHistory = () => {
     const [dateRange, setDateRange] = useState('2025-08-05 → 2025-08-11');
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [selectedStartDate, setSelectedStartDate] = useState(new Date('2025-08-05'));
     const [selectedEndDate, setSelectedEndDate] = useState(new Date('2025-08-11'));
     const [currentMonth, setCurrentMonth] = useState(new Date('2025-08-01'));
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchCriteria, setSearchCriteria] = useState('Client Order ID');
+    const [searchCriteria, setSearchCriteria] = useState('PG Transaction ID');
 
-    // Mock data for transactions
-    const transactions = [
+    // Mock data for settlements
+    const settlements = [
         {
-            id: 'TXN001',
-            date: '2025-01-15',
-            time: '10:30 AM',
-            prepaidTransactionId: 'PT001',
-            customer: 'John Doe',
-            paymentMethod: 'Credit Card',
-            paymentAmount: '₹1,49,999'
+            id: 'SET001',
+            settlementId: 'STL001',
+            settlementDate: '2025-01-15',
+            settlementTime: '10:30 AM',
+            payoutAmount: '₹1,42,500',
+            numberOfTransactions: 15,
+            walletRechargeAmount: '₹1,49,999',
+            walletRechargeId: 'WR001',
+            paymentGateway: 'Razorpay',
+            settlementUtrRef: 'UTR123456789',
+            bankLast4Digits: '5678',
+            bankName: 'HDFC Bank'
         },
         {
-            id: 'TXN002',
-            date: '2025-01-14',
-            time: '02:15 PM',
-            prepaidTransactionId: 'PT002',
-            customer: 'Jane Smith',
-            paymentMethod: 'UPI',
-            paymentAmount: '₹89,999'
-        },
-        {
-            id: 'TXN003',
-            date: '2025-01-13',
-            time: '11:45 AM',
-            prepaidTransactionId: 'PT003',
-            customer: 'Mike Johnson',
-            paymentMethod: 'Net Banking',
-            paymentAmount: '₹79,999'
+            id: 'SET002',
+            settlementId: 'STL002',
+            settlementDate: '2025-01-14',
+            settlementTime: '02:15 PM',
+            payoutAmount: '₹85,500',
+            numberOfTransactions: 8,
+            walletRechargeAmount: '₹89,999',
+            walletRechargeId: 'WR002',
+            paymentGateway: 'Stripe',
+            settlementUtrRef: 'UTR987654321',
+            bankLast4Digits: '4321',
+            bankName: 'ICICI Bank'
         }
     ];
 
-    const filteredTransactions = transactions.filter(transaction => {
+    const filteredSettlements = settlements.filter(settlement => {
         const matchesSearch =
-            transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            transaction.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            transaction.prepaidTransactionId.toLowerCase().includes(searchTerm.toLowerCase());
+            settlement.settlementId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            settlement.paymentGateway.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesSearch;
     });
 
     const handleDownload = () => {
         const headers = [
-            'Order ID',
-            'Date & Time',
-            'Prepaid Transaction ID',
-            'Customer',
-            'Payment Method',
-            'Payment Amount'
+            'Settlement ID (Fastrr/PG)',
+            'Settlement Date & Time',
+            'Payout amount',
+            'No of Transactions',
+            'Wallet Recharge amount',
+            'Wallet Recharge ID',
+            'Payment Gateway',
+            'Settlement UTR/Ref no',
+            'Bank Details (Last 4 digit)',
+            'Bank Name (Settlement A/C)'
         ];
 
         const csvContent = [
             headers.join(','),
-            ...filteredTransactions.map(txn => [
-                txn.id,
-                `${txn.date} ${txn.time}`,
-                txn.prepaidTransactionId,
-                txn.customer,
-                txn.paymentMethod,
-                txn.paymentAmount
+            ...filteredSettlements.map(settlement => [
+                settlement.settlementId,
+                `${settlement.settlementDate} ${settlement.settlementTime}`,
+                settlement.payoutAmount,
+                settlement.numberOfTransactions,
+                settlement.walletRechargeAmount,
+                settlement.walletRechargeId,
+                settlement.paymentGateway,
+                settlement.settlementUtrRef,
+                settlement.bankLast4Digits,
+                settlement.bankName
             ].join(','))
         ].join('\n');
 
@@ -85,7 +94,7 @@ const Finance = () => {
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
-        link.setAttribute('download', `transactions_${new Date().toISOString().split('T')[0]}.csv`);
+        link.setAttribute('download', `settlements_${new Date().toISOString().split('T')[0]}.csv`);
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
@@ -209,9 +218,18 @@ const Finance = () => {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
-                </div>
+                {/* Total Settlement Card */}
+                <Card className="w-64">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="text-2xl font-bold text-gray-900">0</div>
+                            <div className="text-sm text-gray-600">Total Settlement</div>
+                        </div>
+                        <div className="p-3 bg-blue-50 rounded-lg">
+                            <ShoppingCart size={24} className="text-blue-600" />
+                        </div>
+                    </div>
+                </Card>
 
                 {/* Date Range Picker */}
                 <div className="relative">
@@ -310,31 +328,7 @@ const Finance = () => {
                 </div>
             </div>
 
-            {/* Download Button */}
-            <div className="flex justify-end">
-                <button
-                    onClick={handleDownload}
-                    className="btn-primary flex items-center space-x-2 hover:bg-[#d6731a] transition-colors"
-                >
-                    <Download size={16} />
-                    <span>Download All</span>
-                </button>
-            </div>
-
-            {/* Payment Amount Card */}
-            <Card className="w-64">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <div className="text-2xl font-bold text-gray-900">₹0.00</div>
-                        <div className="text-sm text-gray-600">Payment Amount</div>
-                    </div>
-                    <div className="p-3 bg-blue-50 rounded-lg">
-                        <span className="text-2xl">₹</span>
-                    </div>
-                </div>
-            </Card>
-
-            {/* Search and Filters */}
+            {/* Filters and Actions */}
             <Card>
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
@@ -345,9 +339,9 @@ const Finance = () => {
                                 onChange={(e) => setSearchCriteria(e.target.value)}
                                 className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-[#F58220] bg-white cursor-pointer w-full sm:w-40"
                             >
-                                <option value="Client Order ID">Client Order ID</option>
-                                <option value="Prepaid Transaction ID">Prepaid Transaction ID</option>
-                                <option value="Customer">Customer</option>
+                                <option value="PG Transaction ID">PG Transaction ID</option>
+                                <option value="Settlement ID">Settlement ID</option>
+                                <option value="Payment Gateway">Payment Gateway</option>
                             </select>
                             <FilterIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
                         </div>
@@ -364,48 +358,79 @@ const Finance = () => {
                             />
                         </div>
                     </div>
+
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                        {/* Download Button */}
+                        <button
+                            onClick={handleDownload}
+                            className="btn-primary flex items-center space-x-2 hover:bg-[#d6731a] transition-colors"
+                        >
+                            <Download size={16} />
+                            <span>Download All</span>
+                        </button>
+                    </div>
                 </div>
             </Card>
 
-            {/* Transactions Table */}
+            {/* Settlements Table */}
             <Card>
                 <div className="overflow-x-auto">
                     <Table headers={[
-                        'Order ID',
-                        'Date & Time',
-                        'Prepaid Transaction ID',
-                        'Customer',
-                        'Payment Method',
-                        'Payment Amount'
+                        '',
+                        'Settlement ID (Fastrr/PG)',
+                        'Settlement Date & Time',
+                        'Payout amount',
+                        'No of Transactions',
+                        'Wallet Recharge amount',
+                        'Wallet Recharge ID',
+                        'Payment Gateway',
+                        'Settlement UTR/Ref no',
+                        'Bank Details (Last 4 digit)',
+                        'Bank Name (Settlement A/C)'
                     ]}>
-                        {filteredTransactions.map((transaction) => (
-                            <TableRow key={transaction.id}>
+                        {filteredSettlements.map((settlement) => (
+                            <TableRow key={settlement.id}>
+                                <TableCell>
+                                    <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                </TableCell>
                                 <TableCell className="font-medium text-blue-600 cursor-pointer hover:underline">
-                                    {transaction.id}
+                                    {settlement.settlementId}
                                 </TableCell>
                                 <TableCell>
-                                    <div className="text-sm text-gray-900">{transaction.date}</div>
-                                    <div className="text-xs text-gray-500">{transaction.time}</div>
-                                </TableCell>
-                                <TableCell className="text-sm text-gray-700 font-mono">
-                                    {transaction.prepaidTransactionId}
-                                </TableCell>
-                                <TableCell className="font-medium text-gray-900">
-                                    {transaction.customer}
-                                </TableCell>
-                                <TableCell className="text-sm text-gray-700">
-                                    {transaction.paymentMethod}
+                                    <div className="text-sm text-gray-900">{settlement.settlementDate}</div>
+                                    <div className="text-xs text-gray-500">{settlement.settlementTime}</div>
                                 </TableCell>
                                 <TableCell className="font-semibold text-gray-900">
-                                    {transaction.paymentAmount}
+                                    {settlement.payoutAmount}
+                                </TableCell>
+                                <TableCell className="text-sm text-gray-700">
+                                    {settlement.numberOfTransactions}
+                                </TableCell>
+                                <TableCell className="font-semibold text-gray-900">
+                                    {settlement.walletRechargeAmount}
+                                </TableCell>
+                                <TableCell className="text-sm text-gray-700 font-mono">
+                                    {settlement.walletRechargeId}
+                                </TableCell>
+                                <TableCell className="text-sm text-gray-700">
+                                    {settlement.paymentGateway}
+                                </TableCell>
+                                <TableCell className="text-sm text-gray-700 font-mono">
+                                    {settlement.settlementUtrRef}
+                                </TableCell>
+                                <TableCell className="text-sm text-gray-700 font-mono">
+                                    {settlement.bankLast4Digits}
+                                </TableCell>
+                                <TableCell className="text-sm text-gray-700">
+                                    {settlement.bankName}
                                 </TableCell>
                             </TableRow>
                         ))}
                     </Table>
 
-                    {filteredTransactions.length === 0 && (
+                    {filteredSettlements.length === 0 && (
                         <div className="text-center py-12">
-                            <div className="text-lg font-medium text-gray-900 mb-2">No transactions found</div>
+                            <div className="text-lg font-medium text-gray-900 mb-2">No settlements found</div>
                             <div className="text-gray-500">Try adjusting your search criteria or date range</div>
                         </div>
                     )}
@@ -415,4 +440,4 @@ const Finance = () => {
     );
 };
 
-export default Finance; 
+export default SettlementHistory;
