@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Card = ({ children, className = '', title, subtitle, action }) => {
     return (
         <div className={`card ${className}`}>

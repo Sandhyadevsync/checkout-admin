@@ -9,9 +9,9 @@ import Refunds from './pages/Refunds';
 import Wallet from './pages/Wallet';
 import SettlementHistory from './pages/SettlementHistory';
 import RewardsHistory from './pages/RewardsHistory';
-import Reports from './pages/Reports';
 import UserManagement from './pages/UserManagement';
 import Settings from './pages/Settings';
+import Reports from './pages/Reports';
 
 function App() {
   return (
@@ -27,9 +27,9 @@ function App() {
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/settlement-history" element={<SettlementHistory />} />
           <Route path="/rewards-history" element={<RewardsHistory />} />
-          <Route path="/reports" element={<Reports />} />
           <Route path="/user-management" element={<UserManagement />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/reports" element={<Reports />} />
         </Routes>
       </MainLayout>
     </Router>

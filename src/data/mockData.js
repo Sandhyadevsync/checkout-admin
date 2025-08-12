@@ -3,11 +3,196 @@
 export const dashboardStats = {
     totalOrders: 1247,
     totalRevenue: 284750,
+    totalCustomers: 892,
     abandonedCarts: 89,
     conversionRate: 12.5,
     avgOrderValue: 228.5,
-    monthlyGrowth: 8.2
+    monthlyGrowth: 8.2,
+    newCustomers: 89,
+    repeatCustomers: 1158
 };
+
+// Traffic Acquisition Data
+export const trafficAcquisitionData = [
+    {
+        source: '(direct) / (none) / (none)',
+        checkouts: 6,
+        orders: 0,
+        revenue: 0,
+        conversion: '-'
+    },
+    {
+        source: 'korinmi.com / referral / (none)',
+        checkouts: 1,
+        orders: 0,
+        revenue: 0,
+        conversion: '-'
+    },
+    {
+        source: 'l.instagram.com / referral / (none)',
+        checkouts: 1,
+        orders: 0,
+        revenue: 0,
+        conversion: '-'
+    },
+    {
+        source: 'google.com / organic / (none)',
+        checkouts: 3,
+        orders: 1,
+        revenue: 150,
+        conversion: '33.33%'
+    },
+    {
+        source: 'facebook.com / social / (none)',
+        checkouts: 2,
+        orders: 0,
+        revenue: 0,
+        conversion: '-'
+    },
+    {
+        source: 'email / newsletter / (none)',
+        checkouts: 4,
+        orders: 2,
+        revenue: 300,
+        conversion: '50%'
+    },
+    {
+        source: 'bing.com / organic / (none)',
+        checkouts: 1,
+        orders: 0,
+        revenue: 0,
+        conversion: '-'
+    }
+];
+
+// Payment Mode Data
+export const paymentModeData = [
+    {
+        mode: 'Credit/Debit Card',
+        checkouts: 45,
+        orders: 12,
+        gmv: 2840,
+        percentageCompletion: '26.67%'
+    },
+    {
+        mode: 'UPI',
+        checkouts: 32,
+        orders: 8,
+        gmv: 1890,
+        percentageCompletion: '25.00%',
+        subModes: [
+            { mode: 'gpay', checkouts: 18, orders: 5, gmv: 1120, percentageCompletion: '27.78%' },
+            { mode: 'PhonePe', checkouts: 14, orders: 3, gmv: 770, percentageCompletion: '21.43%' }
+        ]
+    },
+    {
+        mode: 'Net Banking',
+        checkouts: 28,
+        orders: 6,
+        gmv: 1560,
+        percentageCompletion: '21.43%'
+    },
+    {
+        mode: 'Wallet',
+        checkouts: 15,
+        orders: 3,
+        gmv: 890,
+        percentageCompletion: '20.00%'
+    }
+];
+
+// Discounts Analytics Data
+export const discountsAnalyticsData = [
+    {
+        code: 'KORINMIGIFT',
+        type: 'discount',
+        totalOrders: 0,
+        conversion: '0.00%',
+        totalGMV: 0,
+        totalDiscountAmount: 0,
+        totalAttempts: 0.00,
+        totalApplied: 0.00,
+        errorRate: '100.00'
+    },
+    {
+        code: 'KORINMILOVE',
+        type: 'discount',
+        totalOrders: 0,
+        conversion: '0.00%',
+        totalGMV: 0,
+        totalDiscountAmount: 0,
+        totalAttempts: 1.00,
+        totalApplied: 1.00,
+        errorRate: '0.00'
+    },
+    {
+        code: 'WELCOME10',
+        type: 'percentage',
+        totalOrders: 15,
+        conversion: '12.50%',
+        totalGMV: 2840,
+        totalDiscountAmount: 284,
+        totalAttempts: 120,
+        totalApplied: 15,
+        errorRate: '87.50'
+    },
+    {
+        code: 'SAVE20',
+        type: 'fixed',
+        totalOrders: 8,
+        conversion: '8.00%',
+        totalGMV: 1890,
+        totalDiscountAmount: 160,
+        totalAttempts: 100,
+        totalApplied: 8,
+        errorRate: '92.00'
+    },
+    {
+        code: 'FIRSTORDER',
+        type: 'discount',
+        totalOrders: 22,
+        conversion: '18.33%',
+        totalGMV: 4560,
+        totalDiscountAmount: 456,
+        totalAttempts: 120,
+        totalApplied: 22,
+        errorRate: '81.67'
+    }
+];
+
+// User Feedback Data
+export const userFeedbackData = [
+    {
+        id: 1,
+        customerName: 'John Doe',
+        email: 'john@example.com',
+        rating: 5,
+        feedback: 'Excellent service! The checkout process was smooth and fast.',
+        category: 'Service',
+        status: 'Resolved',
+        date: '2024-01-15'
+    },
+    {
+        id: 2,
+        customerName: 'Jane Smith',
+        email: 'jane@example.com',
+        rating: 4,
+        feedback: 'Good experience overall, but could improve mobile responsiveness.',
+        category: 'UI/UX',
+        status: 'In Progress',
+        date: '2024-01-14'
+    },
+    {
+        id: 3,
+        customerName: 'Mike Johnson',
+        email: 'mike@example.com',
+        rating: 3,
+        feedback: 'Payment gateway had some issues during checkout.',
+        category: 'Technical',
+        status: 'Pending',
+        date: '2024-01-13'
+    }
+];
 
 export const recentOrders = [
     {
