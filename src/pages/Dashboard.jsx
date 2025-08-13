@@ -49,7 +49,7 @@ const StatCard = ({ title, value, change, changeType = 'up', icon: Icon, color =
                     )}
                     {change && (
                         <div className="flex items-center mt-2">
-                            <changeIcon className={`${changeColor}`} size={16} />
+                            {React.createElement(changeIcon, { className: changeColor, size: 16 })}
                             <span className={`text-sm font-medium ${changeColor} ml-1`}>
                                 {changeType === 'up' ? '+' : ''}{change}%
                             </span>

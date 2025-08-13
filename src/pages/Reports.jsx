@@ -1,31 +1,40 @@
 import { useState } from 'react';
 import {
-    Plus,
-    Download,
-    Eye,
-    Trash2,
-    Filter,
     Search,
+    Download,
+    Filter,
+    MoreHorizontal,
+    Eye,
+    Edit,
+    Trash2,
     Calendar,
+    ChevronDown,
     FileText,
+    Plus,
     BarChart3,
-    PieChart,
     TrendingUp,
     Users,
-    DollarSign
+    ShoppingCart
 } from 'lucide-react';
 import Card from '../components/Card';
 import { Table, TableRow, TableCell } from '../components/Table';
 
 const Reports = () => {
+    const [dateRange, setDateRange] = useState('2025-08-05 → 2025-08-11');
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [selectedStartDate, setSelectedStartDate] = useState(new Date('2025-08-05'));
+    const [selectedEndDate, setSelectedEndDate] = useState(new Date('2025-08-11'));
+    const [currentMonth, setCurrentMonth] = useState(new Date('2025-08-01'));
     const [searchTerm, setSearchTerm] = useState('');
-    const [reportTypeFilter, setReportTypeFilter] = useState('All');
+    const [searchCriteria, setSearchCriteria] = useState('Report Name');
+    const [showFilters, setShowFilters] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
     const [showGenerateModal, setShowGenerateModal] = useState(false);
     const [newReport, setNewReport] = useState({
         type: 'Select Report Type',
         emails: '',
-        startDate: '',
-        endDate: ''
+        startDate: null,
+        endDate: null
     });
 
     // Mock data for reports
@@ -92,31 +101,159 @@ const Reports = () => {
     });
 
     const handleGenerateReport = () => {
-        // Check if required fields are filled
-        if (newReport.type && newReport.type !== 'Select Report Type') {
-            // Here you would typically make an API call to generate the report
-            console.log('Generating report:', newReport);
+        // Here you would typically make an API call to generate the report
+        console.log('Generating report:', newReport);
+        setShowGenerateModal(false);
+        setNewReport({
+            type: 'Select Report Type',
+            emails: '',
+            startDate: null,
+            endDate: null
+        });
+    };
 
-            // Show success message
-            alert('Report generation initiated successfully!');
+    const handleDownload = () => {
+        const headers = [
+            'Report Name',
+            'Type',
+            'Created Date',
+            'Status',
+            'Actions'
+        ];
 
-            // Close modal and reset form
-            setShowGenerateModal(false);
-            setNewReport({
-                type: 'Select Report Type',
-                emails: '',
-                startDate: '',
-                endDate: ''
-            });
+        const csvContent = [
+            headers.join(','),
+            ...filteredReports.map(report => [
+                report.name,
+                report.type,
+                report.createdDate,
+                report.status,
+                'View/Download'
+            ].join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `reports_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const formatDate = (date) => {
+        return date.toISOString().split('T')[0];
+    };
+
+    const getDaysInMonth = (date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDay = firstDay.getDay();
+        return { daysInMonth, startingDay };
+    };
+
+    const isDateInRange = (date) => {
+        const checkDate = new Date(date);
+        return checkDate >= selectedStartDate && checkDate <= selectedEndDate;
+    };
+
+    const isDateSelected = (date) => {
+        const checkDate = new Date(date);
+        return formatDate(checkDate) === formatDate(selectedStartDate) ||
+            formatDate(checkDate) === formatDate(selectedEndDate);
+    };
+
+    const handleDateSelect = (date) => {
+        if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+            setSelectedStartDate(date);
+            setSelectedEndDate(null);
         } else {
-            // Show validation error
-            alert('Please select a report type to continue.');
+            if (date < selectedStartDate) {
+                setSelectedEndDate(selectedStartDate);
+                setSelectedStartDate(date);
+            } else {
+                setSelectedEndDate(date);
+            }
         }
     };
 
-    const handleDownload = (reportId) => {
-        // Here you would typically trigger the download
-        console.log('Downloading report:', reportId);
+    const handleQuickSelect = (type) => {
+        const today = new Date();
+        let start, end;
+
+        switch (type) {
+            case 'today':
+                start = end = new Date(today);
+                break;
+            case 'yesterday':
+                start = end = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+                break;
+            case 'last7days':
+                start = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000);
+                end = today;
+                break;
+            case 'thisMonth':
+                start = new Date(today.getFullYear(), today.getMonth(), 1);
+                end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                break;
+            case 'last30days':
+                start = new Date(today.getTime() - 29 * 24 * 60 * 60 * 1000);
+                end = today;
+                break;
+            default:
+                return;
+        }
+
+        setSelectedStartDate(start);
+        setSelectedEndDate(end);
+        setDateRange(`${formatDate(start)} → ${formatDate(end)}`);
+        setShowDatePicker(false);
+    };
+
+    const applyDateRange = () => {
+        if (selectedStartDate && selectedEndDate) {
+            setDateRange(`${formatDate(selectedStartDate)} → ${formatDate(selectedEndDate)}`);
+            setShowDatePicker(false);
+        }
+    };
+
+    const renderCalendar = (monthOffset = 0) => {
+        const displayDate = new Date(currentMonth);
+        displayDate.setMonth(displayDate.getMonth() + monthOffset);
+        const { daysInMonth, startingDay } = getDaysInMonth(displayDate);
+
+        const days = [];
+        for (let i = 0; i < startingDay; i++) {
+            days.push(<div key={`empty-${i}`} className="w-8 h-8"></div>);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(displayDate.getFullYear(), displayDate.getMonth(), day);
+            const inRange = isDateInRange(date);
+            const selected = isDateSelected(date);
+
+            days.push(
+                <button
+                    key={day}
+                    onClick={() => handleDateSelect(date)}
+                    className={`w-8 h-8 rounded-full text-sm font-medium transition-all duration-200 ${selected
+                        ? 'bg-blue-600 text-white'
+                        : inRange
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'hover:bg-gray-100 text-gray-700'
+                        }`}
+                >
+                    {day}
+                </button>
+            );
+        }
+
+        return days;
     };
 
     const handleDelete = (reportId) => {
@@ -348,25 +485,17 @@ const Reports = () => {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                     Date Range
                                 </label>
-                                <div className="flex items-center space-x-2">
+                                <div className="grid grid-cols-2 gap-2">
                                     <input
                                         type="date"
-                                        value={newReport.startDate}
-                                        onChange={(e) => setNewReport({ ...newReport, startDate: e.target.value })}
-                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-[#F58220]"
-                                        placeholder="Start date"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-[#F58220]"
+                                        placeholder="Start Date"
                                     />
-                                    <span className="text-gray-400">→</span>
-                                    <div className="flex-1 relative">
-                                        <input
-                                            type="date"
-                                            value={newReport.endDate}
-                                            onChange={(e) => setNewReport({ ...newReport, endDate: e.target.value })}
-                                            className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-[#F58220]"
-                                            placeholder="End date"
-                                        />
-                                        <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                                    </div>
+                                    <input
+                                        type="date"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-[#F58220]"
+                                        placeholder="End Date"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -376,8 +505,8 @@ const Reports = () => {
                                 onClick={handleGenerateReport}
                                 disabled={newReport.type === 'Select Report Type'}
                                 className={`px-6 py-3 font-medium rounded-lg transition-all duration-200 shadow-lg ${newReport.type === 'Select Report Type'
-                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                        : 'bg-[#F58220] text-white hover:bg-[#d6731a]'
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-[#F58220] text-white hover:bg-[#d6731a]'
                                     }`}
                             >
                                 Generate Report

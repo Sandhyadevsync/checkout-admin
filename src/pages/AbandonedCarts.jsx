@@ -2,29 +2,33 @@ import { useState } from 'react';
 import {
     Search,
     Download,
+    Filter,
+    MoreHorizontal,
     Eye,
     Edit,
-    MoreHorizontal,
-    Clock,
-    AlertCircle,
-    ChevronDown,
+    Trash2,
     Calendar,
-    Filter,
+    ChevronDown,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    ShoppingCart,
+    User,
+    Mail,
+    Phone
 } from 'lucide-react';
 import Card from '../components/Card';
 import { Table, TableRow, TableCell } from '../components/Table';
 
 const AbandonedCarts = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [cartIdFilter, setCartIdFilter] = useState('');
-    const [channelFilter, setChannelFilter] = useState('Fastrr');
     const [dateRange, setDateRange] = useState('2025-08-05 → 2025-08-11');
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [selectedStartDate, setSelectedStartDate] = useState(new Date('2025-08-05'));
     const [selectedEndDate, setSelectedEndDate] = useState(new Date('2025-08-11'));
     const [currentMonth, setCurrentMonth] = useState(new Date('2025-08-01'));
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchCriteria, setSearchCriteria] = useState('Cart ID');
+    const [channelFilter, setChannelFilter] = useState('All');
+    const [showFilters, setShowFilters] = useState(false);
 
     // Mock data for abandoned carts
     const abandonedCarts = [
@@ -75,7 +79,7 @@ const AbandonedCarts = () => {
             cart.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
             cart.fastrrOrderId.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesCartId = cartIdFilter === '' || cart.id.includes(cartIdFilter);
+        const matchesCartId = searchCriteria === 'Cart ID' || cart.id.includes(searchTerm);
 
         return matchesSearch && matchesCartId;
     });
@@ -210,19 +214,16 @@ const AbandonedCarts = () => {
 
         setSelectedStartDate(start);
         setSelectedEndDate(end);
-        setDateRange(`${formatDate(start)} → ${formatDate(end)}`);
-        setShowDatePicker(false);
     };
 
     const applyDateRange = () => {
         if (selectedStartDate && selectedEndDate) {
             setDateRange(`${formatDate(selectedStartDate)} → ${formatDate(selectedEndDate)}`);
-            setShowDatePicker(false);
         }
     };
 
     const renderCalendar = (monthOffset = 0) => {
-        const displayDate = new Date(currentMonth);
+        const displayDate = new Date(selectedStartDate); // Use selectedStartDate for calendar rendering
         displayDate.setMonth(displayDate.getMonth() + monthOffset);
         const { daysInMonth, startingDay } = getDaysInMonth(displayDate);
 
@@ -263,93 +264,49 @@ const AbandonedCarts = () => {
                 <div className="relative">
                     <button
                         onClick={() => setShowDatePicker(!showDatePicker)}
-                        className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="btn-primary flex items-center space-x-2"
                     >
-                        <Calendar size={16} className="text-gray-400" />
-                        <span className="text-sm text-gray-700">{dateRange}</span>
-                        <ChevronDown size={16} className="text-gray-400" />
+                        <Calendar size={16} />
+                        <span>{dateRange}</span>
+                        <ChevronDown size={16} />
                     </button>
-
-                    {/* Date Picker Popup */}
                     {showDatePicker && (
-                        <div className="absolute right-0 top-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4 min-w-[600px]">
-                            {/* Calendar Navigation */}
-                            <div className="flex items-center justify-between mb-4">
-                                <button
-                                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
-                                    className="p-1 hover:bg-gray-100 rounded"
-                                >
-                                    <ChevronLeft size={16} />
-                                </button>
-                                <div className="flex space-x-8">
-                                    <span className="font-medium text-gray-900">
-                                        {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                                    </span>
-                                    <span className="font-medium text-gray-900">
-                                        {new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                                    </span>
-                                </div>
-                                <button
-                                    onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
-                                    className="p-1 hover:bg-gray-100 rounded"
-                                >
-                                    <ChevronRight size={16} />
-                                </button>
-                            </div>
-
-                            {/* Two Month Calendars */}
-                            <div className="flex space-x-8 mb-4">
-                                {/* First Month */}
-                                <div className="flex-1">
-                                    <div className="grid grid-cols-7 gap-1 mb-2">
-                                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                                            <div key={day} className="w-8 h-8 flex items-center justify-center text-xs font-medium text-gray-500">
-                                                {day}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="grid grid-cols-7 gap-1">
-                                        {renderCalendar(0)}
-                                    </div>
-                                </div>
-
-                                {/* Second Month */}
-                                <div className="flex-1">
-                                    <div className="grid grid-cols-7 gap-1 mb-2">
-                                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                                            <div key={day} className="w-8 h-8 flex items-center justify-center text-xs font-medium text-gray-500">
-                                                {day}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="grid grid-cols-7 gap-1">
-                                        {renderCalendar(1)}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Quick Selection Buttons */}
-                            <div className="flex space-x-2 mb-4">
-                                {['Today', 'Yesterday', 'Last 7 Days', 'This Month', 'Last 30 Days'].map((type) => (
-                                    <button
-                                        key={type}
-                                        onClick={() => handleQuickSelect(type.toLowerCase().replace(/\s+/g, ''))}
-                                        className="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 transition-colors"
-                                    >
-                                        {type}
+                        <div className="absolute z-10 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg">
+                            <div className="p-4">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="text-lg font-semibold text-gray-900">Select Date Range</h3>
+                                    <button onClick={() => setShowDatePicker(false)} className="text-gray-500 hover:text-gray-700">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-circle"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                                     </button>
-                                ))}
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button onClick={() => handleQuickSelect('today')} className="btn-secondary">Today</button>
+                                    <button onClick={() => handleQuickSelect('yesterday')} className="btn-secondary">Yesterday</button>
+                                    <button onClick={() => handleQuickSelect('last7days')} className="btn-secondary">Last 7 Days</button>
+                                    <button onClick={() => handleQuickSelect('thisMonth')} className="btn-secondary">This Month</button>
+                                    <button onClick={() => handleQuickSelect('last30days')} className="btn-secondary">Last 30 Days</button>
+                                </div>
+                                <div className="mt-4 flex justify-end">
+                                    <button onClick={applyDateRange} className="btn-primary">Apply</button>
+                                </div>
                             </div>
-
-                            {/* Apply Button */}
-                            <div className="flex justify-end">
-                                <button
-                                    onClick={applyDateRange}
-                                    disabled={!selectedStartDate || !selectedEndDate}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                                >
-                                    Apply
-                                </button>
+                            <div className="p-4 border-t border-gray-200">
+                                <h4 className="text-sm font-semibold text-gray-900 mb-2">Select Month</h4>
+                                <div className="flex justify-between items-center">
+                                    <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))} className="text-gray-500 hover:text-gray-700">
+                                        <ChevronLeft size={16} />
+                                    </button>
+                                    <span className="text-lg font-semibold text-gray-900">{currentMonth.toLocaleString('default', { month: 'numeric' })}</span>
+                                    <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))} className="text-gray-500 hover:text-gray-700">
+                                        <ChevronRight size={16} />
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-7 gap-1 mt-4">
+                                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                                        <div key={day} className="text-center text-sm text-gray-500">{day}</div>
+                                    ))}
+                                    {renderCalendar()}
+                                </div>
                             </div>
                         </div>
                     )}
@@ -401,13 +358,12 @@ const AbandonedCarts = () => {
                         {/* Cart ID Filter */}
                         <div className="relative">
                             <select
-                                value={cartIdFilter}
-                                onChange={(e) => setCartIdFilter(e.target.value)}
+                                value={searchCriteria}
+                                onChange={(e) => setSearchCriteria(e.target.value)}
                                 className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#F58220] focus:border-[#F58220] bg-white cursor-pointer w-full sm:w-40"
                             >
-                                <option value="">Cart ID</option>
-                                <option value="CART">CART</option>
-                                <option value="FR">Fastrr Order ID</option>
+                                <option value="Cart ID">Cart ID</option>
+                                <option value="Fastrr Order ID">Fastrr Order ID</option>
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
                         </div>

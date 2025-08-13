@@ -10,26 +10,42 @@ import {
     Users,
     Clock,
     TrendingDown,
-    CreditCard
+    CreditCard,
+    Building2
 } from 'lucide-react';
+import { financeSubRoutes, ordersSubRoutes, adminSubRoutes } from '../routes';
+import { useBrand } from '../contexts/BrandContext';
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [expandedSections, setExpandedSections] = useState(new Set(['orders']));
     const location = useLocation();
+    const { userPermissions } = useBrand();
+
+    // Icon mapping for dynamic icon rendering
+    const iconMap = {
+        LayoutDashboard,
+        ShoppingCart,
+        ShoppingBag,
+        Wallet,
+        Settings,
+        BarChart3,
+        Users,
+        Clock,
+        TrendingDown,
+        CreditCard,
+        Building2
+    };
 
     const navigation = [
-        { name: 'Dashboard', icon: LayoutDashboard, path: '/', type: 'item' },
+        { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', type: 'item' },
         {
             name: 'Orders',
             icon: ShoppingCart,
             path: '/orders',
             type: 'section',
-            children: [
-                { name: 'Orders', path: '/orders', icon: ShoppingCart },
-                { name: 'Pending Orders', path: '/pending-orders', icon: Clock }
-            ]
+            children: ordersSubRoutes
         },
         { name: 'Abandoned Carts', icon: ShoppingBag, path: '/abandoned-carts', type: 'item' },
         {
@@ -37,15 +53,17 @@ const Sidebar = () => {
             icon: Wallet,
             path: '/finance',
             type: 'section',
-            children: [
-                { name: 'Customer Finance', path: '/finance', icon: Wallet },
-                { name: 'Refunds', path: '/refunds', icon: TrendingDown },
-                { name: 'Wallet', path: '/wallet', icon: CreditCard },
-                { name: 'Settlement History', path: '/settlement-history', icon: BarChart3 },
-                { name: 'Rewards History', path: '/rewards-history', icon: BarChart3 }
-            ]
+            children: financeSubRoutes
         },
         { name: 'Reports', icon: BarChart3, path: '/reports', type: 'item' },
+        // Admin section - only show if user has admin permissions
+        ...(userPermissions.canManageBrands ? [{
+            name: 'Admin',
+            icon: Building2,
+            path: '/brand-management',
+            type: 'section',
+            children: adminSubRoutes
+        }] : []),
         { name: 'User Management', icon: Users, path: '/user-management', type: 'item' },
         { name: 'Settings', icon: Settings, path: '/settings', type: 'item' },
     ];

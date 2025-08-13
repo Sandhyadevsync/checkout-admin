@@ -4,16 +4,97 @@
 @tailwind utilities;
 
 /* Custom scrollbar hiding */
-.scrollbar-hide {
+.hide-scrollbar {
   -ms-overflow-style: none;
-  /* Internet Explorer 10+ */
   scrollbar-width: none;
-  /* Firefox */
 }
 
-.scrollbar-hide::-webkit-scrollbar {
+.hide-scrollbar::-webkit-scrollbar {
   display: none;
-  /* Safari and Chrome */
+}
+
+/* DateRangePicker animations */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutToTop {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.animate-in {
+  animation: slideInFromTop 0.2s ease-out;
+}
+
+.animate-out {
+  animation: slideOutToTop 0.2s ease-in;
+}
+
+/* DateRangePicker hover effects */
+.date-picker-day:hover {
+  transform: scale(1.1);
+  transition: transform 0.15s ease-in-out;
+}
+
+.date-picker-day:active {
+  transform: scale(0.95);
+}
+
+/* Smooth transitions for all DateRangePicker elements */
+.date-range-picker * {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Enhanced focus states */
+.date-range-picker button:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.date-range-picker.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.date-range-picker.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f4f6;
+  border-top: 2px solid #f97316;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Global styles */

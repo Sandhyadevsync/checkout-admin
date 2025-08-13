@@ -20,76 +20,11 @@ const Finance = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchCriteria, setSearchCriteria] = useState('Client Order ID');
 
-    // Mock data for transactions
-    const transactions = [
-        {
-            id: 'TXN001',
-            date: '2025-01-15',
-            time: '10:30 AM',
-            prepaidTransactionId: 'PT001',
-            customer: 'John Doe',
-            paymentMethod: 'Credit Card',
-            paymentAmount: '₹1,49,999'
-        },
-        {
-            id: 'TXN002',
-            date: '2025-01-14',
-            time: '02:15 PM',
-            prepaidTransactionId: 'PT002',
-            customer: 'Jane Smith',
-            paymentMethod: 'UPI',
-            paymentAmount: '₹89,999'
-        },
-        {
-            id: 'TXN003',
-            date: '2025-01-13',
-            time: '11:45 AM',
-            prepaidTransactionId: 'PT003',
-            customer: 'Mike Johnson',
-            paymentMethod: 'Net Banking',
-            paymentAmount: '₹79,999'
-        }
-    ];
-
-    const filteredTransactions = transactions.filter(transaction => {
-        const matchesSearch =
-            transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            transaction.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            transaction.prepaidTransactionId.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesSearch;
-    });
-
-    const handleDownload = () => {
-        const headers = [
-            'Order ID',
-            'Date & Time',
-            'Prepaid Transaction ID',
-            'Customer',
-            'Payment Method',
-            'Payment Amount'
-        ];
-
-        const csvContent = [
-            headers.join(','),
-            ...filteredTransactions.map(txn => [
-                txn.id,
-                `${txn.date} ${txn.time}`,
-                txn.prepaidTransactionId,
-                txn.customer,
-                txn.paymentMethod,
-                txn.paymentAmount
-            ].join(','))
-        ].join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `transactions_${new Date().toISOString().split('T')[0]}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const handleDateRangeChange = (start, end) => {
+        setSelectedStartDate(start);
+        setSelectedEndDate(end);
+        setDateRange(`${formatDate(start)} → ${formatDate(end)}`);
+        setShowDatePicker(false);
     };
 
     const formatDate = (date) => {
@@ -203,6 +138,78 @@ const Finance = () => {
         }
 
         return days;
+    };
+
+    // Mock data for transactions
+    const transactions = [
+        {
+            id: 'TXN001',
+            date: '2025-01-15',
+            time: '10:30 AM',
+            prepaidTransactionId: 'PT001',
+            customer: 'John Doe',
+            paymentMethod: 'Credit Card',
+            paymentAmount: '₹1,49,999'
+        },
+        {
+            id: 'TXN002',
+            date: '2025-01-14',
+            time: '02:15 PM',
+            prepaidTransactionId: 'PT002',
+            customer: 'Jane Smith',
+            paymentMethod: 'UPI',
+            paymentAmount: '₹89,999'
+        },
+        {
+            id: 'TXN003',
+            date: '2025-01-13',
+            time: '11:45 AM',
+            prepaidTransactionId: 'PT003',
+            customer: 'Mike Johnson',
+            paymentMethod: 'Net Banking',
+            paymentAmount: '₹79,999'
+        }
+    ];
+
+    const filteredTransactions = transactions.filter(transaction => {
+        const matchesSearch =
+            transaction.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            transaction.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            transaction.prepaidTransactionId.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesSearch;
+    });
+
+    const handleDownload = () => {
+        const headers = [
+            'Order ID',
+            'Date & Time',
+            'Prepaid Transaction ID',
+            'Customer',
+            'Payment Method',
+            'Payment Amount'
+        ];
+
+        const csvContent = [
+            headers.join(','),
+            ...filteredTransactions.map(txn => [
+                txn.id,
+                `${txn.date} ${txn.time}`,
+                txn.prepaidTransactionId,
+                txn.customer,
+                txn.paymentMethod,
+                txn.paymentAmount
+            ].join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `transactions_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (
